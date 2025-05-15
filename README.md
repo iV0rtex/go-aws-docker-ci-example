@@ -1,0 +1,1 @@
+# go-aws-docker-ci-example
