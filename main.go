@@ -2,18 +2,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
 func main() {
-	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("pong")
+	r := mux.NewRouter()
+	r.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte("pong"))
 		if err != nil {
 			return
 		}
 	})
-
-	fmt.Println("starting server on port 8080")
-	http.ListenAndServe(":80", nil)
+	fmt.Println("starting server on port 80")
+	http.ListenAndServe(":80", r)
 }

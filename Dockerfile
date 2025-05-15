@@ -1,10 +1,13 @@
 FROM golang:1.22-alpine3.19 as builder
 
-LABEL authors="vortex"
+LABEL authors="serhiihulko"
 
 WORKDIR /build
-COPY . /build/
 
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
 RUN GOARCH=amd64 CGO_ENABLED=0 GOOS=linux go build -o app .
 RUN tar -czvf app.tar.gz app config.ini
 

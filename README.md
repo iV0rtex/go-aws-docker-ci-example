@@ -16,4 +16,4 @@ This is a minimal Go REST API example with a complete CI/CD pipeline using:
 git clone https://github.com/iV0rtex/go-aws-docker-ci-example.git
 cd go-aws-docker-ci-example
 docker build -t go-example .
-docker run -p 8080:8080 go-example
+docker run -p 80:80 go-example
