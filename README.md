@@ -13,7 +13,7 @@ This is a minimal Go REST API example with a complete CI/CD pipeline using:
 ## 🔧 Local Setup
 
 ```bash
-git clone https://github.com/<your-username>/go-aws-docker-ci-example.git
+git clone https://github.com/iV0rtex/go-aws-docker-ci-example.git
 cd go-aws-docker-ci-example
 docker build -t go-example .
 docker run -p 8080:8080 go-example
