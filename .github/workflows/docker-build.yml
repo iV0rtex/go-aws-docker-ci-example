@@ -8,6 +8,7 @@ on:
       - 'Dockerfile'
       - 'go.mod'
       - 'go.sum'
+      - 'config.ini'
       - '.github/workflows/docker-build.yml'
 
 jobs:
