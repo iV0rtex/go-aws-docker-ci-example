@@ -1,21 +1,14 @@
 name: Deploy to AWS EC2
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - '**.go'
-      - 'Dockerfile'
-      - 'go.mod'
-      - 'go.sum'
-      - 'config.ini'
-      - '.github/workflows/docker-build.yml'
-      - '.github/workflows/deploy.yml'
+  workflow_run:
+    workflows: ["Build and Push Docker Image"]
+    types:
+      - completed
 jobs:
   deploy:
-    runs-on:
-      ubuntu-latest
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
     steps:
       - name: SSH and deploy
         uses: appleboy/ssh-action@v1.0.0
