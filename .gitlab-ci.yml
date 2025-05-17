@@ -17,9 +17,9 @@ Test:
 
 Build:
   stage: build
-  image: docker:20.10.10
+  image: docker:24.0.6-cli
   services:
-    - docker:20.10.10-dind
+    - docker:24.0.6-dind
   before_script:
     - echo $DOCKER_PASSWORD | docker login -u $CI_DOCKER_USERNAME --password-stdin docker.io
     - docker buildx inspect mybuilder || docker buildx create --use --name mybuilder
