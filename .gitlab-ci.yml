@@ -21,7 +21,7 @@ Test:
       - 'go.mod'
       - 'go.sum'
       - 'config.ini'
-      - '.gitlab-ci.yaml'
+      - '.gitlab-ci.yml'
 
 Build:
   stage: build
@@ -36,7 +36,15 @@ Build:
   script:
     - docker buildx build --platform linux/amd64 -t $IMAGE_TAG --push .
   only:
-    - master
+    refs:
+      - master
+    changes:
+      - '**/*.go'
+      - 'Dockerfile'
+      - 'go.mod'
+      - 'go.sum'
+      - 'config.ini'
+      - '.gitlab-ci.yml'
 
 Deploy:
   stage: deploy
@@ -52,4 +60,12 @@ Deploy:
         docker run -d --name $CI_DOCKER_REPO -p 80:80 $IMAGE_TAG
       "
   only:
-    - master
+    refs:
+      - master
+    changes:
+      - '**/*.go'
+      - 'Dockerfile'
+      - 'go.mod'
+      - 'go.sum'
+      - 'config.ini'
+      - '.gitlab-ci.yml'
