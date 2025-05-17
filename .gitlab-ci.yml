@@ -41,7 +41,7 @@ Deploy:
         docker pull $IMAGE_TAG &&
         docker stop $CI_DOCKER_REPO || true &&
         docker rm $CI_DOCKER_REPO || true &&
-        docker run -d --name $APP_NAME -p 80:80 $IMAGE_TAG
+        docker run -d --name $CI_DOCKER_REPO -p 80:80 $IMAGE_TAG
       "
   only:
       - master
