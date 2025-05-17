@@ -1,0 +1,30 @@
+name: Start tests
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '**.go'
+      - 'Dockerfile'
+      - 'go.mod'
+      - 'go.sum'
+      - 'config.ini'
+      - '.github/workflows/test.yml'
+      - '.github/workflows/docker-build.yml'
+      - '.github/workflows/deploy.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+
+      - name: Run Go tests
+        run: go test -v ./...
