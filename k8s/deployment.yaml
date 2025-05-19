@@ -15,7 +15,6 @@ spec:
     spec:
       containers:
         - name: my-go-app
-          image: my-go-app:latest
-          imagePullPolicy: "Never"
+          image: serhiihulko/my-go-app:latest
           ports:
             - containerPort: 80
