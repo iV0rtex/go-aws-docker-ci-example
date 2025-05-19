@@ -19,7 +19,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "k8s/deployment.yaml,k8s/service.yaml"
+          source: "k8s/*"
           target: "/home/ec2-user/app"
 
       - name: Deploy to EC2 with kubectl
