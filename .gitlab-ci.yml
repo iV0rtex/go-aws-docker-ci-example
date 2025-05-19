@@ -59,7 +59,6 @@ Deploy:
     - echo "$EC2_SSH_KEY" > id_rsa && chmod 600 id_rsa
       - scp -o StrictHostKeyChecking=no -i id_rsa k8s/deployment.yaml k8s/service.yaml ec2-user@$EC2_HOST:/home/ec2-user/app/k8s/
       - ssh -o StrictHostKeyChecking=no -i id_rsa ec2-user@$EC2_HOST "cd /home/ec2-user/app/k8s && kubectl apply -f deployment.yaml && kubectl apply -f service.yaml"
-      "
   only:
     refs:
       - master
