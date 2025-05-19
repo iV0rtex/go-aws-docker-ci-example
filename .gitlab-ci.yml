@@ -1,0 +1,71 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  APP_NAME: my-go-app
+  IMAGE_TAG: "${CI_DOCKER_USERNAME}/${CI_DOCKER_REPO}:latest"
+
+Test:
+  stage: test
+  image: golang:1.22
+  script:
+    - go test -v ./...
+  only:
+    refs:
+      - master
+    changes:
+      - '**/*.go'
+      - 'Dockerfile'
+      - 'go.mod'
+      - 'go.sum'
+      - 'config.ini'
+      - '.gitlab-ci.yml'
+
+Build:
+  stage: build
+  image: docker:24.0.6-cli
+  services:
+    - docker:24.0.6-dind
+  before_script:
+    - echo $DOCKER_PASSWORD | docker login -u $CI_DOCKER_USERNAME --password-stdin docker.io
+    - docker buildx inspect mybuilder || docker buildx create --use --name mybuilder
+  variables:
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker buildx build --platform linux/amd64 -t $IMAGE_TAG --push .
+  only:
+    refs:
+      - master
+    changes:
+      - '**/*.go'
+      - 'Dockerfile'
+      - 'go.mod'
+      - 'go.sum'
+      - 'config.ini'
+      - '.gitlab-ci.yml'
+
+Deploy:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh
+  script:
+    - echo "$EC2_SSH_KEY" > id_rsa && chmod 600 id_rsa
+    - ssh -o StrictHostKeyChecking=no -i id_rsa ec2-user@$EC2_HOST " 
+        docker pull $IMAGE_TAG &&
+        docker stop $CI_DOCKER_REPO || true &&
+        docker rm $CI_DOCKER_REPO || true &&
+        docker run -d --name $CI_DOCKER_REPO -p 80:80 $IMAGE_TAG
+      "
+  only:
+    refs:
+      - master
+    changes:
+      - '**/*.go'
+      - 'Dockerfile'
+      - 'go.mod'
+      - 'go.sum'
+      - 'config.ini'
+      - '.gitlab-ci.yml'
