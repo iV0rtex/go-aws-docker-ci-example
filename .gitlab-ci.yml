@@ -22,6 +22,8 @@ Test:
       - 'go.sum'
       - 'config.ini'
       - '.gitlab-ci.yml'
+      - 'k8s/deployment.yaml'
+      - 'k8s/service.yaml'
 
 Build:
   stage: build
@@ -45,6 +47,8 @@ Build:
       - 'go.sum'
       - 'config.ini'
       - '.gitlab-ci.yml'
+      - 'k8s/deployment.yaml'
+      - 'k8s/service.yaml'
 
 Deploy:
   stage: deploy
@@ -53,11 +57,8 @@ Deploy:
     - apk add --no-cache openssh
   script:
     - echo "$EC2_SSH_KEY" > id_rsa && chmod 600 id_rsa
-    - ssh -o StrictHostKeyChecking=no -i id_rsa ec2-user@$EC2_HOST " 
-        docker pull $IMAGE_TAG &&
-        docker stop $CI_DOCKER_REPO || true &&
-        docker rm $CI_DOCKER_REPO || true &&
-        docker run -d --name $CI_DOCKER_REPO -p 80:80 $IMAGE_TAG
+      - scp -o StrictHostKeyChecking=no -i id_rsa k8s/deployment.yaml k8s/service.yaml ec2-user@$EC2_HOST:/home/ec2-user/app/k8s/
+      - ssh -o StrictHostKeyChecking=no -i id_rsa ec2-user@$EC2_HOST "cd /home/ec2-user/app/k8s && kubectl apply -f deployment.yaml && kubectl apply -f service.yaml"
       "
   only:
     refs:
@@ -69,3 +70,5 @@ Deploy:
       - 'go.sum'
       - 'config.ini'
       - '.gitlab-ci.yml'
+      - 'k8s/deployment.yaml'
+      - 'k8s/service.yaml'
