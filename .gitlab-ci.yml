@@ -56,7 +56,7 @@ Deploy:
   script:
     - echo "$EC2_SSH_KEY" > id_rsa && chmod 600 id_rsa
     - scp -o StrictHostKeyChecking=no -i id_rsa -rp helm ec2-user@$EC2_HOST:/home/ec2-user/app/
-    - ssh -o StrictHostKeyChecking=no -i id_rsa ec2-user@$EC2_HOST "cd /home/ec2-user/app && export KUBECONFIG=/etc/rancher/k3s/k3s.yaml && helm upgrade --install my-go-app ./helm -f ./helm/values.prod.yaml"
+    - ssh -o StrictHostKeyChecking=no -i id_rsa ec2-user@$EC2_HOST "find /home/ec2-user/app/helm -type f -exec chmod 644 {} \; && find /home/ec2-user/app/helm -type d -exec chmod 755 {} \;&& cd /home/ec2-user/app && export KUBECONFIG=/etc/rancher/k3s/k3s.yaml && helm upgrade --install my-go-app ./helm -f ./helm/values.prod.yaml"
   only:
     refs:
       - master
