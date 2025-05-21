@@ -55,7 +55,7 @@ Deploy:
     - apk add --no-cache openssh
   script:
     - echo "$EC2_SSH_KEY" > id_rsa && chmod 600 id_rsa
-    - scp -o StrictHostKeyChecking=no -i id_rsa helm ec2-user@$EC2_HOST:/home/ec2-user/app/
+    - scp -o StrictHostKeyChecking=no -i id_rsa -r helm ec2-user@$EC2_HOST:/home/ec2-user/app/
     - ssh -o StrictHostKeyChecking=no -i id_rsa ec2-user@$EC2_HOST "cd /home/ec2-user/app && export KUBECONFIG=/etc/rancher/k3s/k3s.yaml && helm upgrade --install my-go-app ./helm -f ./helm/values.prod.yaml"
   only:
     refs:
