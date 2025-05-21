@@ -30,4 +30,5 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ec2-user/app/helm
+            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
             helm upgrade --install my-go-app . -f values.prod.yaml
