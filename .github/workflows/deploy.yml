@@ -13,13 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Copy YAML files to EC2
+      - name: Copy Helm chart to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "k8s/*"
+          source: "helm/**"
           target: "/home/ec2-user/app"
 
       - name: Deploy to EC2 with kubectl
@@ -29,6 +29,5 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ec2-user/app/k8s
-            kubectl apply -f deployment.yaml
-            kubectl apply -f service.yaml
+            cd /home/ec2-user/app/helm
+            helm upgrade --install my-go-app . -f values.prod.yaml

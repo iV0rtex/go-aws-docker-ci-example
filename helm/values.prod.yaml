@@ -1,0 +1,15 @@
+
+replicaCount: 1
+
+image:
+  repository: serhiihulko/my-go-app
+  pullPolicy: Always
+  tag: "latest"
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30080
+
+containerPort: 80
+
